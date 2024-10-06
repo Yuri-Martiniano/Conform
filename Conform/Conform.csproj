@@ -7,13 +7,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Dependências adicionais do projeto -->
+    <!-- AWS SDK para interação com o S3 -->
     <PackageReference Include="AWSSDK.S3" Version="3.7.404.1" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+
+    <!-- OpenAPI/Swagger para documentação da API -->
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.8" />
+
+    <!-- MongoDB.Driver para comunicação com o banco de dados MongoDB -->
     <PackageReference Include="MongoDB.Driver" Version="2.29.0" />
+
+    <!-- Swashbuckle para integração com Swagger/OpenAPI -->
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+
+    <!-- Microsoft.Extensions.Options para uso de injeção de dependência e configurações -->
     <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
+
+    <!-- System.Diagnostics.Contracts para uso de contratos e verificação de invariantes -->
+    <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
