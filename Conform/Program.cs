@@ -1,43 +1,42 @@
-// configuração da injeção de dependencias
-// configurando o banco de dados usadondo o banco de dados do appsettings.json para o CRUD
-using Conform.Services;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
+using Conform.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// add o mongoDB ao projeto utilizando a string de coneção do appsettings.json
-builder.Services.AddSingleton<IMongoClient, MongoClient>(IServerSession =>
-//IserverSession é um objeto que representa um acesso ao banco de dados sendo um localizador de serviços
+// Obtém a string de conexão do appsettings.json
+var mongoDbConnectionString = builder.Configuration.GetConnectionString("MongoDb");
+
+// Inicializa o MongoDB com a string de conexão fornecida
+builder.Services.AddSingleton<IMongoClient, MongoClient>(sp =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("MongoDB");
-    return new MongoClient(connectionString);
+    return new MongoClient(mongoDbConnectionString);
 });
 
-// Add o MongoDB para ser usado nos controladores utilizando o MongoDBContext que pode cria e atualizar documentos do banco de dados
+// Adiciona um contexto de banco de dados, se necessário
 builder.Services.AddSingleton<MongoDbContext>();
 
 // Adiciona controladores ao contêiner de serviços
 builder.Services.AddControllers();
 
-// Adiciona suporte ao Swagger
+// Adiciona suporte ao Swagger para documentação
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Habilita a interface Swagger para visualização dos endpoints
-app.UseSwagger();
-app.UseSwaggerUI();
+// Habilita a interface do Swagger
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
-// Add controladores como uma funcionalidade disponivel da aplicação ele registra os controladores para serem usados
+// Configura o pipeline de requisições HTTP
+app.UseHttpsRedirection();
+app.UseAuthorization();
 
-//Configura o roteamento para o controlador
-app.UseRouting();
-
-//Mapeia os controladores diretamente
 app.MapControllers();
 
 app.Run();
